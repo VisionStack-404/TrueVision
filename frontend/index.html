@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrueVision — Forensic AI Engine</title>
+  <meta name="description" content="State-of-the-art forensic deepfake detection platform." />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    .arch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+    .arch-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 2.5rem; border-radius: 20px; transition: all 0.4s cubic-bezier(.16,1,.3,1); }
+    .arch-card:hover { transform: translateY(-8px); background: rgba(255,255,255,0.04); border-color: rgba(124,58,237,0.3); box-shadow:0 30px 60px rgba(0,0,0,0.5); }
+    .arch-card h3 { display:flex; align-items:center; gap:0.75rem; font-size:1.6rem; margin-bottom:1.5rem; color:#fff; }
+    .arch-card p { color:rgba(255,255,255,0.5); font-size:0.95rem; line-height:1.6; margin-bottom:1.2rem; }
+    .arch-card ul { list-style:none; padding:0; margin:0 0 1.5rem; color:rgba(255,255,255,0.6); font-size:0.9rem; }
+    .arch-card ul li { margin-bottom: 0.6rem; position:relative; padding-left:1.5rem; }
+    .arch-card ul li::before { content:'●'; position:absolute; left:0; color:var(--v500); font-size:0.6rem; top:0.4rem; }
+    .arch-tag { display:inline-block; padding:0.3rem 0.6rem; background:rgba(124,58,237,0.1); border:1px solid rgba(124,58,237,0.2); border-radius:6px; font-size:0.7rem; font-weight:600; margin:0 4px 6px 0; color:var(--v300); text-transform:uppercase; }
+    .arch-tag.best { background:rgba(0,245,255,0.05); border-color:rgba(0,245,255,0.2); color:#00f5ff; }
+
+    .limit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 3rem 0; }
+    .limit-box { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 2rem; }
+    .limit-box h4 { font-size:1rem; text-transform:uppercase; letter-spacing:2px; margin-bottom:1.5rem; display:flex; align-items:center; gap:10px; }
+    .limit-list { list-style:none; padding:0; display:grid; gap:12px; }
+    .limit-list li { display:flex; align-items:start; gap:10px; font-size:0.95rem; color:rgba(255,255,255,0.6); }
+    .limit-list li svg { flex-shrink:0; margin-top:4px; }
+
+    .step-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top:3rem; }
+    .step-card { text-align:center; position:relative; }
+    .step-num { width:40px; height:40px; background:var(--v600); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem; font-weight:900; color:#fff; box-shadow:0 0 20px var(--glow-v); }
+
+    .arch-diagram-wrap { position:relative; width:100%; max-width:1000px; margin: 4rem auto; border-radius:24px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); }
+    .scanner-line {
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: #00ffcc;
+      box-shadow: 0 0 25px 5px rgba(0, 255, 204, 0.4);
+      animation: scan-vertical 5s linear infinite;
+      z-index: 10;
+    }
+    @keyframes scan-vertical { 0% { top: -10%; } 50% { top: 110%; } 100% { top: -10%; } }
+  </style>
+</head>
+<body class="landing-body">
+
+  <div id="landing-page">
+    <div class="landing-bg">
+      <div class="landing-grid"></div>
+      <div class="landing-orb lo-1"></div>
+      <div class="landing-orb lo-2"></div>
+      <div class="landing-particles" id="landing-particles"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="landing-nav">
+      <div class="nav-brand">
+        <div class="nav-shield">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <strong>TrueVision</strong>
+          <span>Forensic Intelligence</span>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#how-it-works" class="nav-link">How it Works</a>
+        <a href="#architecture" class="nav-link">Architecture</a>
+        <a href="#capabilities" class="nav-link">Capabilities</a>
+        <button id="theme-toggle-landing" title="Toggle Theme" style="background:none;border:none;color:rgba(255,255,255,0.35);cursor:pointer;padding:4px;display:flex;align-items:center;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <a href="login.html" class="nav-cta">Go to Dashboard</a>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          Weighted Ensemble: CNN×0.33 + CViT×0.33 + ETCNN×0.34
+        </div>
+        <h1 class="hero-title" style="font-family:'Playfair Display',serif; font-size:4.2rem; letter-spacing:-1px;">
+          The camera can now lie.<br/>
+          <span style="font-family:'Inter',sans-serif;font-weight:900;">We expose the truth.</span>
+          <br/><span class="cyber-typewriter">Initializing forensic scan...</span>
+        </h1>
+        <p class="hero-sub" style="font-size:1.2rem; color:rgba(255,255,255,0.5); line-height:1.7;">
+          Exposing deepfakes through pixel-level texture analysis, Laplacian edge verification, and high-frequency synthesis detection.
+        </p>
+        <div class="hero-actions">
+          <a href="login.html" class="hero-cta-primary">
+            <div class="btn-shimmer"></div>
+            Start Analysis
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-device" style="position: relative;">
+          <div class="device-topbar">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            <span class="device-url">truevision.ai/secure-scan</span>
+          </div>
+          <div class="device-screen" style="padding: 32px 24px; display: flex; flex-direction: column; gap: 20px; position: relative;">
+            
+            <!-- FAKE CARD -->
+            <div class="mock-verdict-card" style="background:rgba(255,255,255,0.03); border:1px solid rgba(239,68,68,0.2); border-radius:16px; padding:24px; display:flex; justify-content:space-between; align-items:center; position: relative; z-index: 2; transform: rotate(-1.5deg) translateX(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px rgba(239,68,68,0.15); animation: float 5s ease-in-out infinite;">
+              <div class="mock-left">
+                <small style="color:rgba(255,255,255,0.3); text-transform:uppercase; font-size:10px;">Final Verdict</small>
+                <div style="display:flex; align-items:center; gap:8px; margin:8px 0;">
+                  <div style="width:10px; height:10px; border-radius:50%; background:#ef4444; box-shadow:0 0 12px #ef4444;"></div>
+                  <span style="color:#ef4444; font-weight:900; font-size:26px;">FAKE</span>
+                </div>
+                <p style="color:rgba(255,255,255,0.6); font-size:12px;">Synthetic frequency artifacts caught.</p>
+              </div>
+              <div style="position:relative; width:80px; height:80px;">
+                <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+                  <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="5"/>
+                  <circle cx="50" cy="50" r="38" fill="none" stroke="#ef4444" stroke-width="5" stroke-linecap="round" stroke-dasharray="210 239" transform="rotate(-90 50 50)"/>
+                </svg>
+                <span style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; font-weight:800;">91.4%</span>
+              </div>
+            </div>
+
+            <!-- REAL CARD -->
+            <div class="mock-verdict-card" style="background:rgba(255,255,255,0.03); border:1px solid rgba(16,185,129,0.2); border-radius:16px; padding:24px; display:flex; justify-content:space-between; align-items:center; position: relative; z-index: 1; transform: rotate(1.5deg) translateX(8px); box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px rgba(16,185,129,0.15); animation: float-delay 6s ease-in-out infinite;">
+              <div class="mock-left">
+                <small style="color:rgba(255,255,255,0.3); text-transform:uppercase; font-size:10px;">Final Verdict</small>
+                <div style="display:flex; align-items:center; gap:8px; margin:8px 0;">
+                  <div style="width:10px; height:10px; border-radius:50%; background:#10b981; box-shadow:0 0 12px #10b981;"></div>
+                  <span style="color:#10b981; font-weight:900; font-size:26px;">REAL</span>
+                </div>
+                <p style="color:rgba(255,255,255,0.6); font-size:12px;">Natural pixel geometry verified.</p>
+              </div>
+              <div style="position:relative; width:80px; height:80px;">
+                <svg viewBox="0 0 100 100" style="width:100%; height:100%;">
+                  <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="5"/>
+                  <circle cx="50" cy="50" r="38" fill="none" stroke="#10b981" stroke-width="5" stroke-linecap="round" stroke-dasharray="230 239" transform="rotate(-90 50 50)"/>
+                </svg>
+                <span style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; font-weight:800;">98.2%</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- User Journey -->
+    <section class="landing-section" id="how-it-works" style="background:rgba(0,0,0,0.2);">
+      <div class="section-center">
+        <div class="landing-section-badge">How to Use</div>
+        <h2 class="landing-h2">Forensic Walkthrough</h2>
+        <div class="step-grid">
+          <div class="step-card">
+            <div class="step-num">01</div>
+            <h3 style="color:#fff; margin-bottom:10px;">Upload Media</h3>
+            <p style="color:rgba(255,255,255,0.5);">Drag and drop your suspicious video (.mp4, .avi) or image (.jpg, .png) into the secure dashboard.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">02</div>
+            <h3 style="color:#fff; margin-bottom:10px;">AI Scrutiny</h3>
+            <p style="color:rgba(255,255,255,0.5);">Our tri-model ensemble simultaneously dissects frame biometrics and skin artifacts.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">03</div>
+            <h3 style="color:#fff; margin-bottom:10px;">Forensic Audit</h3>
+            <p style="color:rgba(255,255,255,0.5);">Review the weighted verdict and receive a detailed activity audit directly in your inbox.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- System Architecture Centerpiece -->
+    <section class="landing-section" id="architecture">
+      <div class="section-center">
+        <div class="landing-section-badge">Methodology</div>
+        <h2 class="landing-h2">System Architecture</h2>
+        <div class="arch-diagram-wrap">
+          <div class="scanner-line"></div>
+          <img src="true arc.jpeg" alt="Forensic Architecture" style="width:100%; display:block;">
+        </div>
+        
+        <div class="arch-grid">
+          <!-- CNN Box -->
+          <div class="arch-card">
+            <h3><span>🧠</span> EfficientNet CNN</h3>
+            <p><strong>Focus:</strong> { Raw face pixels }</p>
+            <p>Targeting face-swap artifacts and GAN blending boundaries at the pixel level.</p>
+            <div style="margin-bottom:1rem;">
+              <small style="color:rgba(255,255,255,0.3); display:block; margin-bottom:5px;">TRAINED ON</small>
+              <div class="arch-tag">FaceForensics++</div><div class="arch-tag">DFDC</div><div class="arch-tag">CelebDF</div>
+            </div>
+            <div>
+              <small style="color:rgba(255,255,255,0.3); display:block; margin-bottom:5px;">OPTIMIZED FOR</small>
+              <div class="arch-tag best">DeepFaceLab</div><div class="arch-tag best">FaceSwap</div><div class="arch-tag best">DFDC</div>
+            </div>
+          </div>
+
+          <!-- CViT Box -->
+          <div class="arch-card">
+            <h3><span>👁️</span> CViT Model</h3>
+            <p><strong>Focus:</strong> { Edge-enhanced Laplacian filter }</p>
+            <p>Detecting structural inconsistencies and boundary artifacts that highlight masking seams.</p>
+            <div style="margin-bottom:1rem;">
+              <small style="color:rgba(255,255,255,0.3); display:block; margin-bottom:5px;">TRAINED ON</small>
+              <div class="arch-tag">FaceForensics++</div><div class="arch-tag">DFDC</div><div class="arch-tag">CelebDF</div>
+            </div>
+            <div>
+              <small style="color:rgba(255,255,255,0.3); display:block; margin-bottom:5px;">OPTIMIZED FOR</small>
+              <div class="arch-tag best">Neural Face Replacement</div><div class="arch-tag best">Attribute Editing</div>
+            </div>
+          </div>
+
+          <!-- ETCNN Box -->
+          <div class="arch-card">
+            <h3><span>⚡</span> ETCNN Model</h3>
+            <p><strong>Focus:</strong> { High-frequency texture map }</p>
+            <p>Exposing unnatural skin textures and synthetic generation patterns using online learning.</p>
+            <div style="margin-bottom:1rem;">
+              <small style="color:rgba(255,255,255,0.3); display:block; margin-bottom:5px;">TRAINED ON</small>
+              <div class="arch-tag">FaceForensics++</div><div class="arch-tag">DFDC</div><div class="arch-tag">CelebDF Combined</div>
+            </div>
+            <div>
+              <small style="color:rgba(255,255,255,0.3); display:block; margin-bottom:5px;">OPTIMIZED FOR</small>
+              <div class="arch-tag best">All Deepfake Types</div><div class="arch-tag best">AI-Generated Images</div>
+              <div class="arch-tag" style="background:rgba(16,185,129,0.1); border-color:#10b981; color:#10b981;">Online Learning Enabled</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Tools Toolkit -->
+    <section class="landing-section" id="tools" style="background:linear-gradient(to bottom, transparent, rgba(124,58,237,0.03));">
+      <div class="section-center">
+        <div class="landing-section-badge">Forensic Toolset</div>
+        <h2 class="landing-h2">Advanced Inspection Tools</h2>
+        <p class="landing-p">Explore the individual tools integrated into the TrueVision engine. Each tool acts as a specialized lens for analyzing digital tampering.</p>
+        
+        <div class="arch-grid">
+           <!-- Tool 1: Biometric Scanner -->
+           <div class="arch-card" style="position:relative; overflow:hidden; box-shadow: 0 10px 30px rgba(0,245,255,0.05); border-top: 2px solid rgba(0,245,255,0.4);">
+              <div style="background:rgba(0,245,255,0.1); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00f5ff" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+              </div>
+              <h3 style="color:#00f5ff; font-size:1.3rem;">Biometric Mesh Scanner</h3>
+              <p>Extracts a 3D topographic mesh of faces to ensure consistent lighting, depth, and spatial geometry.</p>
+           </div>
+           
+           <!-- Tool 2: Error Level Analysis -->
+           <div class="arch-card" style="position:relative; overflow:hidden; box-shadow: 0 10px 30px rgba(124,58,237,0.05); border-top: 2px solid rgba(124,58,237,0.4);">
+              <div style="background:rgba(124,58,237,0.1); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <h3 style="color:#a78bfa; font-size:1.3rem;">Error Level Analysis (ELA)</h3>
+              <p>Highlights differences in JPEG compression rates. A digitally altered area will show significantly different error levels.</p>
+           </div>
+           
+           <!-- Tool 3: Frequency Extractor -->
+           <div class="arch-card" style="position:relative; overflow:hidden; box-shadow: 0 10px 30px rgba(239,68,68,0.05); border-top: 2px solid rgba(239,68,68,0.4);">
+              <div style="background:rgba(239,68,68,0.1); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </div>
+              <h3 style="color:#ef4444; font-size:1.3rem;">Frequency Extractor</h3>
+              <p>Isolates high-frequency domain signals (like synthetic GAN noise) that are completely invisible to the human eye.</p>
+           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Capabilities & Limitations -->
+    <section class="landing-section" id="capabilities" style="background:#080810;">
+      <div class="section-center">
+        <div class="landing-section-badge">Forensic Scope</div>
+        <h2 class="landing-h2">Input &amp; Boundaries</h2>
+        
+        <div class="limit-grid">
+           <!-- Supported -->
+           <div class="limit-box" style="border-color:rgba(16,185,129,0.2);">
+              <h4 style="color:#10b981;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                Supported Formats
+              </h4>
+              <ul class="limit-list">
+                <li><strong>Images:</strong> .jpg, .jpeg, .png, .webp</li>
+                <li><strong>Videos:</strong> .mp4, .avi, .mov</li>
+              </ul>
+           </div>
+           
+           <!-- Cannot Detect -->
+           <div class="limit-box" style="border-color:rgba(239,68,68,0.2);">
+              <h4 style="color:#ef4444;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Current Boundaries
+              </h4>
+              <ul class="limit-list">
+                <li>AI-generated videos (Veo, Sora, Runway) — no face-swap artifacts.</li>
+                <li>Heavily compressed videos — artifacts destroyed.</li>
+                <li>Faces smaller than 40×40 pixels — too blurry.</li>
+                <li>Non-face manipulations (body, background only).</li>
+              </ul>
+           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Global Footer -->
+    <footer style="padding: 4rem 2rem; border-top: 1px solid rgba(255,255,255,0.05); background: #030305; text-align:center;">
+        <p style="color:rgba(255,255,255,0.2); font-size:11px; letter-spacing:2px;">© 2026 TRUEVISION FORENSIC SYSTEMS. ALL RIGHTS RESERVED.</p>
+    </footer>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

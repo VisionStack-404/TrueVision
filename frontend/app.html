@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrueVision — AI Deepfake Detection Platform</title>
+  <meta name="description" content="Forensic-grade deepfake detection platform using CNN, CViT and ETCNN ensemble models. Detect manipulated media in seconds." />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- Facebook SDK -->
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+</head>
+<body>
+    <!-- Auth and Dashboard begin -->  <!-- ═══════════════════════════════════════
+       AUTH OVERLAY  (Login / Signup)
+  ═══════════════════════════════════════ -->
+  <div id="auth-overlay" class="hidden">
+    <div class="auth-bg-left">
+      <div class="auth-mesh"></div>
+      <div class="auth-orb auth-orb-1"></div>
+      <div class="auth-orb auth-orb-2"></div>
+      <div class="auth-brand-panel">
+        <div class="auth-shield">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h2>AI-Powered<br/>Deepfake Detection</h2>
+        <p>Tri-model ensemble — CNN, CViT &amp; ETCNN — delivering forensic-grade analysis of digital media in real-time.</p>
+        <div class="auth-feature-pills">
+          <div class="auth-pill"><span class="pill-dot violet"></span>CNN · Face-swap</div>
+          <div class="auth-pill"><span class="pill-dot purple"></span>CViT · Boundary</div>
+          <div class="auth-pill"><span class="pill-dot indigo"></span>ETCNN · Texture</div>
+        </div>
+        <div class="auth-stats">
+          <div class="auth-stat">
+            <div class="as-ring"><span>99.2%</span></div>
+            <small>Accuracy</small>
+          </div>
+          <div class="auth-stat">
+            <div class="as-ring"><span>3</span></div>
+            <small>AI Models</small>
+          </div>
+          <div class="auth-stat">
+            <div class="as-ring"><span>&lt;30s</span></div>
+            <small>Real‑time</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-right">
+      <!-- Close / Back to landing -->
+      <button class="auth-back-btn" id="auth-back-btn" title="Back to home">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+
+      <!-- LOGIN FORM -->
+      <div id="form-login" class="auth-card">
+        <div class="auth-logo-row">
+          <div class="logo-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div><strong>TrueVision</strong><span>Forensic Engine</span></div>
+        </div>
+        <h2>Welcome back</h2>
+        <p class="auth-sub">Sign in to your forensic workspace</p>
+
+        <form id="login-form" autocomplete="off">
+          <div class="field-group">
+            <label>Email address</label>
+            <div class="input-wrap">
+              <svg class="input-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <input id="login-email" type="email" placeholder="analyst@truevision.ai" autocomplete="email" />
+            </div>
+            <span class="field-err" id="login-email-err"></span>
+          </div>
+          <div class="field-group">
+            <label>Password</label>
+            <div class="input-wrap pw-wrap">
+              <svg class="input-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input id="login-pw" type="password" placeholder="••••••••" autocomplete="current-password" />
+              <button type="button" class="pw-toggle" data-target="login-pw">
+                <svg class="eye-show" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="eye-hide hidden" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+            <span class="field-err" id="login-pw-err"></span>
+          </div>
+          <div class="forgot-row"><a href="#" class="forgot-link">Forgot password?</a></div>
+          <button type="submit" class="btn-primary" id="login-btn">
+            <span class="btn-label">Sign In</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </form>
+
+        <div class="auth-divider"><span>or continue with</span></div>
+        <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom: 1.5rem;">
+          <div id="google-btn-login" class="mt-4" style="width: 100%; display: flex; justify-content: center;"></div>
+          <button type="button" class="btn-social" id="fb-login-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.249h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            Continue with Facebook
+          </button>
+          <button type="button" class="btn-social" onclick="mockSocialLogin('Twitter')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#1DA1F2"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+            Continue with Twitter
+          </button>
+        </div>
+        <p class="auth-switch">Don't have an account? <button type="button" onclick="switchAuth('signup')">Sign up free</button></p>
+      </div>
+
+      <!-- SIGNUP FORM -->
+      <div id="form-signup" class="auth-card hidden">
+        <div class="auth-logo-row">
+          <div class="logo-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div><strong>TrueVision</strong><span>Forensic Engine</span></div>
+        </div>
+        <h2>Create account</h2>
+        <p class="auth-sub">Join the forensic analysis platform — free</p>
+
+        <form id="signup-form" autocomplete="off">
+          <div class="field-group">
+            <label>Full name</label>
+            <div class="input-wrap">
+              <svg class="input-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input id="signup-name" type="text" placeholder="Alex Investigator" autocomplete="name" />
+            </div>
+            <span class="field-err" id="signup-name-err"></span>
+          </div>
+          <div class="field-group">
+            <label>Email address</label>
+            <div class="input-wrap">
+              <svg class="input-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <input id="signup-email" type="email" placeholder="analyst@truevision.ai" autocomplete="email" />
+            </div>
+            <span class="field-err" id="signup-email-err"></span>
+          </div>
+          <div class="field-group">
+            <label>Password</label>
+            <div class="input-wrap pw-wrap">
+              <svg class="input-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input id="signup-pw" type="password" placeholder="Min. 6 characters" />
+              <button type="button" class="pw-toggle" data-target="signup-pw">
+                <svg class="eye-show" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="eye-hide hidden" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+            <span class="field-err" id="signup-pw-err"></span>
+          </div>
+          <div class="field-group">
+            <label>Confirm password</label>
+            <div class="input-wrap">
+              <svg class="input-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <input id="signup-confirm" type="password" placeholder="Repeat your password" />
+            </div>
+            <span class="field-err" id="signup-confirm-err"></span>
+          </div>
+          <button type="submit" class="btn-primary" id="signup-btn">
+            <span class="btn-label">Create Account</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </form>
+
+        <div class="auth-divider"><span>or sign up with</span></div>
+        <div style="display:flex; flex-direction:column; gap:0.5rem; margin-bottom: 1.5rem;">
+          <div id="google-btn-signup" class="mt-4" style="width: 100%; display: flex; justify-content: center;"></div>
+          <button type="button" class="btn-social" id="fb-signup-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.249h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            Continue with Facebook
+          </button>
+          <button type="button" class="btn-social" onclick="mockSocialLogin('Twitter')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#1DA1F2"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+            Continue with Twitter
+          </button>
+        </div>
+
+        <p class="auth-switch">Already have an account? <button type="button" onclick="switchAuth('login')">Sign in</button></p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════
+       PROFILE SETUP MODAL (after first login)
+  ═══════════════════════════════════════ -->
+  <div id="profile-modal" class="modal-overlay hidden">
+    <div class="modal-box profile-modal-box">
+      <div class="modal-header">
+        <div class="modal-header-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div>
+          <h3>Complete Your Profile</h3>
+          <p>Help us personalize your forensic workspace</p>
+        </div>
+      </div>
+
+      <div class="profile-avatar-preview" id="profile-avatar-preview">A</div>
+
+      <form id="profile-form">
+        <div class="profile-fields">
+          <div class="field-group">
+            <label>Full Name</label>
+            <div class="input-wrap">
+              <svg class="input-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input id="prof-name" type="text" placeholder="Your full name" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Nickname</label>
+            <div class="input-wrap">
+              <svg class="input-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input id="prof-nick" type="text" placeholder="How should we call you?" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Phone Number</label>
+            <div class="input-wrap">
+              <svg class="input-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <input id="prof-phone" type="tel" placeholder="+1 (555) 000-0000" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Date of Birth</label>
+            <div class="input-wrap">
+              <svg class="input-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <input id="prof-dob" type="date" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Profile Photo</label>
+            <div class="input-wrap" style="padding: 4px; border: 1px dashed rgba(255,255,255,0.2); background: rgba(0,0,0,0.2);">
+              <input id="prof-photo-file" type="file" accept="image/png, image/jpeg, image/webp" style="background:transparent; border:none; color:rgba(255,255,255,0.8); font-size: 13px;" />
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary profile-save-btn">
+          <span class="btn-label">Save &amp; Enter Dashboard</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+        <button type="button" class="btn-skip" id="profile-skip-btn">Skip for now</button>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════
+       MAIN DASHBOARD
+  ═══════════════════════════════════════ -->
+  <div id="app" class="hidden">
+    <div class="mesh-bg"></div>
+
+    <div class="layout">
+
+      <!-- ── LEFT SIDEBAR ─────────────────────── -->
+      <aside class="sidebar">
+
+        <!-- Brand -->
+        <div class="sb-brand">
+          <div class="sb-shield">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div>
+            <strong>TrueVision</strong>
+            <span>Forensic AI</span>
+          </div>
+        </div>
+
+        <!-- User Profile -->
+        <div class="sb-profile">
+          <div class="sb-avatar-wrap">
+            <div class="sb-avatar" id="sb-avatar">A</div>
+            <div class="sb-avatar-ring"></div>
+          </div>
+          <div class="sb-user-info">
+            <p class="sb-name" id="sb-name">Analyst</p>
+            <p class="sb-email" id="sb-email">analyst@email.com</p>
+          </div>
+          <button class="sb-edit-btn" id="sb-edit-btn" title="Edit profile">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+        </div>
+
+        <div class="sb-profile-details" id="sb-profile-details" style="flex-direction: column; gap: 8px; margin-top: 10px;">
+          <!-- dynamically filled -->
+        </div>
+
+        <!-- Scan stats -->
+        <div class="sb-stats">
+          <div class="sb-stat-cell">
+            <span id="stat-total">0</span>
+            <small>Total Scans</small>
+          </div>
+          <div class="sb-stat-cell fake">
+            <span id="stat-fake">0</span>
+            <small>Fakes</small>
+          </div>
+          <div class="sb-stat-cell real">
+            <span id="stat-real">0</span>
+            <small>Real</small>
+          </div>
+        </div>
+
+        <!-- New Scan -->
+        <div class="sb-new-btn-wrap">
+          <button class="sb-new-btn" id="new-scan-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Analysis
+          </button>
+        </div>
+
+        <!-- History -->
+        <div class="sb-history-header">
+          <span>Recent Scans</span>
+          <button id="clear-history-btn" title="Clear history">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+          </button>
+        </div>
+
+        <div class="sb-history" id="history-list">
+          <div class="sb-empty">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <p>No scans yet</p>
+          </div>
+        </div>
+        
+        <div class="sb-audit-wrap" style="padding: 10px 20px;">
+          <button class="sb-audit-btn" id="send-full-audit-btn" style="width:100%; padding:8px; border-radius:8px; background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.2); color:#a78bfa; font-size:11px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Email Full Activity Audit
+          </button>
+        </div>
+
+        <!-- Proxy status + Logout -->
+        <div class="sb-footer">
+          <div class="sb-status-row">
+            <div class="sb-status-dot" id="sb-proxy-dot"></div>
+            <span id="sb-proxy-label">Checking proxy...</span>
+          </div>
+          <button class="sb-logout" id="logout-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign out
+          </button>
+        </div>
+      </aside>
+
+      <!-- ── RIGHT MAIN PANEL ──────────────────── -->
+      <main class="main-panel">
+
+        <!-- Topbar -->
+        <header class="topbar">
+          <div class="tb-breadcrumb">
+            <div class="tb-logo-sm">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <span class="tb-sep">/</span>
+            <span class="tb-current" id="tb-current">New Scan</span>
+          </div>
+          <div class="tb-right" style="display:flex;align-items:center;gap:1rem;">
+            <button id="theme-toggle-app" title="Toggle Theme" style="background:none;border:none;color:var(--t2);cursor:pointer;padding:4px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+            <div class="tb-status">
+              <span class="tb-dot-indicator" id="tb-proxy-indicator"></span>
+              <span id="tb-proxy-text">Connecting...</span>
+            </div>
+            <div class="tb-user-chip" id="tb-user-chip">
+              <div class="tuc-avatar" id="tuc-avatar">A</div>
+              <span id="tuc-name">Analyst</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Content scroll area -->
+        <div class="content" id="main-content">
+
+          <!-- ╔══ VIEW: UPLOAD ══╗ -->
+          <div id="view-upload" class="view">
+            <div class="upload-header">
+              <div class="upload-header-badge">
+                <span class="uhb-dot"></span> Live System
+              </div>
+              <h1>Detect Manipulations</h1>
+              <p>Upload a video or image to run forensic deepfake analysis using our 3-model AI ensemble.</p>
+            </div>
+
+            <div class="upload-card card-glass">
+              <div class="drop-zone" id="drop-zone">
+                <div class="dz-bg-rings">
+                  <div class="dz-ring r1"></div>
+                  <div class="dz-ring r2"></div>
+                  <div class="dz-ring r3"></div>
+                </div>
+                <div class="dz-icon">
+                  <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                </div>
+                <h3>Drag &amp; Drop your media</h3>
+                <p class="dz-formats">Images: .jpg .png .webp &nbsp;·&nbsp; Videos: .mp4 .avi .mov</p>
+                <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp,.mp4,.avi,.mov" hidden />
+                <button class="dz-browse-btn" id="browse-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Browse Files
+                </button>
+              </div>
+
+              <!-- File selected preview -->
+              <div id="file-preview" class="file-preview hidden">
+                <div class="fp-thumb" id="fp-thumb">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                </div>
+                <div class="fp-info">
+                  <p id="fp-name">video.mp4</p>
+                  <small id="fp-meta">10 MB · Video</small>
+                  <div class="fp-ready">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    Ready for analysis
+                  </div>
+                </div>
+                <button class="fp-clear" id="fp-clear">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+
+              <button class="analyze-btn hidden" id="analyze-btn">
+                <div class="btn-shimmer"></div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Run Forensic Analysis
+              </button>
+            </div>
+
+            <!-- Capability info -->
+            <div class="capability-card card-glass">
+              <p class="cap-title">Detection Capabilities</p>
+              <div class="cap-models">
+                <div class="cap-model">
+                  <div class="cap-model-icon violet">🧠</div>
+                  <span class="cap-name violet">CNN</span>
+                  <small>Face-swap &amp; GAN blending detection</small>
+                </div>
+                <div class="cap-model">
+                  <div class="cap-model-icon purple">👁️</div>
+                  <span class="cap-name purple">CViT</span>
+                  <small>Edge &amp; structural boundary artifacts</small>
+                </div>
+                <div class="cap-model">
+                  <div class="cap-model-icon indigo">⚡</div>
+                  <span class="cap-name indigo">ETCNN</span>
+                  <small>Texture synthesis (online learner)</small>
+                </div>
+              </div>
+              <p class="cap-formula">Weighted ensemble · CNN×33% + CViT×33% + ETCNN×34%</p>
+            </div>
+          </div>
+
+          <!-- ╔══ VIEW: PROCESSING ══╗ -->
+          <div id="view-processing" class="view hidden">
+            <div class="processing-wrap">
+              <div class="radar-outer">
+                <div class="radar-container">
+                  <div class="radar-beam"></div>
+                  <div class="radar-dot"></div>
+                </div>
+              </div>
+              <p class="proc-title">Deep-level Analysis</p>
+              <p class="proc-file" id="proc-file-name">video.mp4</p>
+
+              <div class="proc-prog-wrap">
+                <div class="proc-prog-labels">
+                  <span>Processing</span><span id="proc-pct">0%</span>
+                </div>
+                <div class="proc-bar-bg"><div class="proc-bar" id="proc-bar"></div></div>
+              </div>
+
+              <div class="terminal card-glass">
+                <div class="terminal-header">
+                  <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                  <span class="terminal-title">system.log</span>
+                </div>
+                <div class="terminal-body" id="terminal-logs"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ╔══ VIEW: RESULTS ══╗ -->
+          <div id="view-results" class="view hidden">
+
+            <!-- Report Header -->
+            <div class="report-header">
+              <div class="rh-left">
+                <div class="rh-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  Forensic Report
+                </div>
+                <h2>Analysis Report</h2>
+                <div class="rh-meta">
+                  <span class="rh-id" id="report-id">TV-2026-0421-001</span>
+                  <span class="rh-sep">·</span>
+                  <span class="rh-time" id="report-time">Just now</span>
+                </div>
+              </div>
+              <div class="rt-actions" style="display:flex;gap:.75rem;">
+                <button class="btn-secondary" id="email-report-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  Email Report
+                </button>
+                <button class="btn-reset" id="reset-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                  New Scan
+                </button>
+              </div>
+            </div>
+
+            <!-- Verdict -->
+            <div class="verdict-card card-glass" id="verdict-card">
+              <div class="verdict-left">
+                <p class="vc-label">Final Verdict</p>
+                <div class="verdict-display">
+                  <div class="verdict-pip" id="verdict-pip"></div>
+                  <h1 class="verdict-text" id="verdict-text">REAL</h1>
+                </div>
+                <!-- Consensus badge -->
+                <div class="consensus-badge" id="consensus-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span id="consensus-text">3/3 Unanimous</span>
+                </div>
+                <p class="verdict-explanation" id="verdict-explanation"></p>
+                <div class="verdict-meta" id="verdict-meta"></div>
+              </div>
+              <div class="confidence-ring-wrap">
+                <svg class="conf-svg" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="6"/>
+                  <circle id="conf-circle" cx="50" cy="50" r="42" fill="none" stroke="#8b5cf6" stroke-width="6" stroke-linecap="round"
+                    stroke-dasharray="0 264" transform="rotate(-90 50 50)"
+                    style="transition: stroke-dasharray 1.8s cubic-bezier(.16,1,.3,1), stroke .6s"/>
+                </svg>
+                <div class="conf-label">
+                  <span id="conf-value">0%</span>
+                  <small>confidence</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Threat Level Bar -->
+            <div class="threat-bar-wrap card-glass" id="threat-bar-wrap">
+              <div class="threat-bar-header">
+                <span class="threat-label">Threat Level</span>
+                <span class="threat-level-text" id="threat-level-text">Low Risk</span>
+              </div>
+              <div class="threat-bar-bg">
+                <div class="threat-bar-fill" id="threat-bar-fill" style="width:0%"></div>
+              </div>
+              <div class="threat-bar-labels">
+                <span>Authentic</span>
+                <span>Suspicious</span>
+                <span>Manipulated</span>
+              </div>
+            </div>
+
+            <!-- Stats row -->
+            <div class="stats-row">
+              <div class="stat-item card-glass">
+                <div class="si-icon violet"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg></div>
+                <div><p class="si-val" id="stat-frames">—</p><small>Frames</small></div>
+              </div>
+              <div class="stat-item card-glass">
+                <div class="si-icon pink"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                <div><p class="si-val" id="stat-faces">—</p><small>Faces</small></div>
+              </div>
+              <div class="stat-item card-glass">
+                <div class="si-icon cyan"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                <div><p class="si-val" id="stat-type">—</p><small>Media</small></div>
+              </div>
+            </div>
+
+            <!-- Model diagnostics -->
+            <div class="section-card card-glass">
+              <div class="section-header">
+                <div class="section-title">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+                  Model Diagnostics
+                </div>
+                <span class="section-badge">Ensemble Vote</span>
+              </div>
+              <div class="model-grid" id="model-grid"></div>
+            </div>
+
+            <!-- Artifact analysis -->
+            <div class="section-card card-glass" id="artifact-section" style="display:none">
+              <div class="section-header">
+                <div class="section-title">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  Deep Artifact Analysis
+                </div>
+                <span class="section-badge">Forensic</span>
+              </div>
+              <div class="artifact-list" id="artifact-list"></div>
+            </div>
+
+            <!-- Facial biometrics -->
+            <div class="section-card card-glass">
+              <div class="section-header">
+                <div class="section-title">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+                  Facial Biometrics
+                </div>
+                <span class="section-badge">Spatial</span>
+              </div>
+              <div class="img-carousel" id="faces-gallery"></div>
+            </div>
+
+            <!-- Keyframes -->
+            <div class="section-card card-glass">
+              <div class="section-header">
+                <div class="section-title">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                  Extracted Keyframes
+                </div>
+                <span class="section-badge">Temporal</span>
+              </div>
+              <div class="img-carousel" id="frames-gallery"></div>
+            </div>
+
+            <!-- Feedback -->
+            <div class="feedback-card card-glass">
+              <div class="fb-info">
+                <div class="fb-info-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                </div>
+                <div>
+                  <strong>Online Learning Feedback</strong>
+                  <p>Your label fine-tunes the ETCNN model in real-time to improve future accuracy</p>
+                </div>
+              </div>
+              <div class="fb-actions" id="fb-actions">
+                <button class="fb-btn fake" id="fb-fake-btn">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+                  Confirm FAKE
+                </button>
+                <button class="fb-btn real" id="fb-real-btn">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+                  Confirm REAL
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ╔══ VIEW: NO FACE ══╗ -->
+          <div id="view-no-face" class="view hidden">
+            <div class="no-face-card card-glass">
+              <div class="nf-icon warning">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <h2>No Faces Detected</h2>
+              <p id="nf-message">The media doesn't contain recognizable human faces.</p>
+              <div class="nf-tips" id="nf-tips"></div>
+              <button class="btn-primary" id="nf-retry-btn"><span class="btn-label">Try Another File</span></button>
+            </div>
+          </div>
+
+          <!-- ╔══ VIEW: ERROR ══╗ -->
+          <div id="view-error" class="view hidden">
+            <div class="no-face-card card-glass">
+              <div class="nf-icon danger">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+              <h2>Analysis Failed</h2>
+              <p id="err-message">Could not connect to the backend.</p>
+              <div class="err-hint card-glass" style="margin:1rem 0;"><code>uvicorn app:app --reload&nbsp;<small>(in /backend)</small></code></div>
+              <button class="btn-primary" id="err-retry-btn"><span class="btn-label">Try Again</span></button>
+            </div>
+          </div>
+          </div>
+
+        </div><!-- /content -->
+        
+        <!-- GLOBAL APP FOOTER -->
+        <footer class="app-footer">
+          <div class="footer-links">
+            <button class="footer-link" onclick="document.getElementById('about-modal').classList.remove('hidden')">About Us</button>
+            <span>&middot;</span>
+            <button class="footer-link">Terms & Privacy</button>
+          </div>
+          <p class="footer-disclaimer">TrueVision AI can make mistakes. Please verify important information.</p>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast-container"></div>
+
+  <!-- Image modal -->
+  <div id="img-modal" class="img-modal hidden">
+    <div class="im-backdrop"></div>
+    <div class="im-box">
+      <div class="im-scan-line"></div>
+      <img id="im-img" src="" alt="Enlarged view" />
+      <div class="im-label" id="im-label"></div>
+      <button class="im-close" id="im-close">✕</button>
+    </div>
+  </div>
+
+  <!-- About Modal -->
+  <div id="about-modal" class="modal-overlay hidden">
+    <div class="modal-box profile-modal-box" style="padding:2rem;">
+      <div class="modal-header" style="border:none; padding:0 0 1rem 0; background:none;">
+        <h3 style="font-size:1.4rem; background:linear-gradient(135deg,#fff,var(--v300)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">About TrueVision</h3>
+        <button class="im-close" onclick="document.getElementById('about-modal').classList.add('hidden')" style="position:absolute; top:1.2rem; right:1.2rem; background:rgba(255,255,255,.05); border:none;">✕</button>
+      </div>
+      <div style="font-size:0.85rem; color:var(--t2); line-height:1.7;">
+        <p style="margin-bottom:1rem;">TrueVision is an advanced forensic AI engine designed combat digital misinformation, specifically deepfakes and manipulated media.</p>
+        <p style="margin-bottom:1.5rem;">Utilizing a robust tri-model ensemble (CNN mapping, CViT boundary detection, and ETCNN texture analysis), TrueVision provides law enforcement and analysts with near real-time, forensic-grade verdicts on image and video integrity.</p>
+        <div style="background:rgba(124,58,237,.06); border:1px solid rgba(124,58,237,.15); padding:1rem; border-radius:12px;">
+          <h4 style="color:#fff; font-size:0.8rem; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.4rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Notice
+          </h4>
+          <p style="font-size:0.75rem; color:rgba(255,255,255,.5); margin:0;">While our ensemble is highly accurate, <strong>TrueVision AI can make mistakes.</strong> It is built to assist rather than replace human judgment. Please consistently verify high-stakes analysis with certified digital forensics experts.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in - OAuth Simulation</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; }
+        .card { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; max-width: 400px; width: 100%; border: 1px solid #ddd; }
+        .provider-logo { font-size: 2rem; margin-bottom: 20px; font-weight: bold; }
+        .google-logo { color: #4285F4; }
+        .google-logo span:nth-child(1) { color:#4285F4; }
+        .google-logo span:nth-child(2) { color:#EA4335; }
+        .google-logo span:nth-child(3) { color:#FBBC05; }
+        .google-logo span:nth-child(4) { color:#4285F4; }
+        .google-logo span:nth-child(5) { color:#34A853; }
+        .google-logo span:nth-child(6) { color:#EA4335; }
+        
+        .fb-logo { color: #1877F2; }
+        .twitter-logo { color: #1DA1F2; }
+        h2 { font-size: 1.5rem; margin-bottom: 10px; color: #202124; font-weight: 400; }
+        p { color: #5f6368; font-size: 1rem; margin-bottom: 30px; }
+        
+        .account-selector { text-align: left; border: 1px solid #dadce0; border-radius: 8px; overflow: hidden; margin-bottom: 20px;}
+        .account-row { display: flex; align-items: center; padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #dadce0; transition: background 0.2s;}
+        .account-row:last-child { border-bottom: none; }
+        .account-row:hover { background: #f8f9fa; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; background: #7c3aed; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px; }
+        .dev-avatar { background: #00f5ff; color: #000; }
+        .details { display: flex; flex-direction: column; }
+        .name { font-size: 0.9rem; font-weight: 600; color: #3c4043; margin-bottom: 2px;}
+        .email { font-size: 0.8rem; color: #5f6368; }
+
+        .notice { font-size: 0.8rem; color: #9aa0a6; margin-top: 30px; border-top: 1px solid #eee; padding-top: 15px;}
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="provider-logo" id="logo">OAuth</div>
+        <h2>Sign in</h2>
+        <p>to continue to <strong>TrueVision Forensic Engine</strong></p>
+
+        <div class="account-selector">
+            <div class="account-row" onclick="simulateLogin('Open Source User', 'opensource@truevision.ai')">
+                <div class="avatar">O</div>
+                <div class="details">
+                    <span class="name">Open Source Developer</span>
+                    <span class="email">opensource@truevision.ai</span>
+                </div>
+            </div>
+            <div class="account-row" onclick="simulateLogin('Test Analyst', 'analyst@truevision.ai')">
+                <div class="avatar dev-avatar">T</div>
+                <div class="details">
+                    <span class="name">Test Analyst</span>
+                    <span class="email">analyst@truevision.ai</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="notice">
+            Open Source Local Mock. This simulates an external provider's OAuth server locally without needing live API credentials.
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const provider = urlParams.get('provider') || 'System';
+        
+        const logoEl = document.getElementById('logo');
+        if (provider === 'google') {
+            logoEl.innerHTML = '<span class="google-logo"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></span>';
+        } else if (provider === 'facebook') {
+            logoEl.innerHTML = '<span class="fb-logo">facebook</span>';
+        } else if (provider === 'twitter') {
+            logoEl.innerHTML = '<span class="twitter-logo">Twitter</span>';
+        }
+
+        function simulateLogin(name, email) {
+            const fakeToken = btoa(JSON.stringify({ name: name, email: email, simulated: true }));
+            
+            if (window.opener && !window.opener.closed) {
+                // Return access token to parent securely using postMessage
+                window.opener.postMessage({ type: 'OAUTH_MOCK_SUCCESS', payload: fakeToken }, '*');
+                try {
+                    window.opener.location.hash = `#access_token=simulate_${fakeToken}`;
+                } catch(e) {}
+                window.close();
+            } else {
+                window.location.href = `index.html#access_token=simulate_${fakeToken}`;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --font-ui: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-ui);
+  background: #060610;
+  color: #f0f0f8;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.35); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(139,92,246,0.6); }
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes spinRadar {
+  to { transform: rotate(360deg); }
+}
+@keyframes scanLine {
+  0%   { top: 0; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes barGrow {
+  from { width: 0; }
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up  { animation: fadeUp 0.5s cubic-bezier(.16,1,.3,1) both; }
+.animate-fade-in  { animation: fadeIn 0.4s ease both; }
+.animate-bar-grow { animation: barGrow 1.2s cubic-bezier(.16,1,.3,1) both; }
+.animate-toast    { animation: toast-in 0.4s cubic-bezier(.16,1,.3,1) both; }
+
+.skeleton {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.08) 50%,
+    rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+}
+
+/* Glass card */
+.glass {
+  background: rgba(15,15,28,0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+/* Radar */
+.radar-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 1px solid rgba(139,92,246,0.25);
+  background:
+    repeating-radial-gradient(transparent, transparent 20px, rgba(139,92,246,0.07) 21px),
+    linear-gradient(rgba(139,92,246,0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139,92,246,0.12) 1px, transparent 1px);
+  background-size: 100% 100%, 24px 24px, 24px 24px;
+  overflow: hidden;
+}
+
+.radar-beam {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 50%; height: 50%;
+  background: linear-gradient(45deg, transparent, rgba(139,92,246,0.65));
+  transform-origin: 0 0;
+  animation: spinRadar 2s linear infinite;
+}
+
+.radar-dot {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #8b5cf6;
+  box-shadow: 0 0 12px #8b5cf6;
+  transform: translate(-50%, -50%);
+}
+
+/* Scan line for modal */
+.scan-line {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: #8b5cf6;
+  box-shadow: 0 0 8px #8b5cf6;
+  animation: scanLine 3s linear infinite;
+  z-index: 10;
+}
+
+/* Pulse ring */
+.pulse-ring::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(139,92,246,0.4);
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+/* Input field used in auth forms */
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 0.75rem;
+  color: #f0f0f8;
+  font-size: 0.875rem;
+  font-family: var(--font-ui);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.input-field::placeholder { color: rgba(255,255,255,0.2); }
+.input-field:focus {
+  border-color: rgba(139,92,246,0.5);
+  background: rgba(139,92,246,0.05);
+}
+

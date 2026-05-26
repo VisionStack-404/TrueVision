@@ -1,0 +1,80 @@
+# Python Virtual Environments
+.venv/
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Python Caches & Compiled bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Secrets & Environment variables
+.env
+*.env
+backend/.env
+ec2_server/.env
+
+# Node.js / React frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+.eslintcache
+.vite/
+.output/
+
+# Deep Learning weights & Large checkpoint files
+*.pth
+*.pth.backup
+*.backup
+models/
+backend/models/
+ec2_server/models/
+truevision-app/node_modules/
+truevision-app/dist/
+
+# Temporary directories & generated inference files
+uploads/
+backend/uploads/
+ec2_server/uploads/
+ec2_server/frames/
+ec2_server/faces/
+ec2_server/temp_faces/
+ec2_server/server.log
+session_faces.json
+session_batch.json
+feedback_log.json
+audit_report.json
+audit_report.txt
+diagnosis.txt
+diagnosis_report.json
+
+# Local datasets and archive backups
+Dataset/
+Dataset - Shortcut.lnk
+truevision_backup_*.tar.gz
+*.tar.gz
+*.zip
+*.rar
+
+# OS specific files
+.DS_Store
+Thumbs.db

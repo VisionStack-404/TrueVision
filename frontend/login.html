@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrueVision - Login</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
+  <!-- Google Identity Services Script -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- Decoding JWT -->
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+
+  <style>
+    :root {
+      --bg-color: #030305;
+      --glass-bg: rgba(255, 255, 255, 0.02);
+      --glass-border: rgba(255, 255, 255, 0.05);
+      --accent: #7c3aed;
+      --text-main: #f0f0f8;
+      --text-muted: rgba(255, 255, 255, 0.5);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Split Layout */
+    .split-layout {
+      display: flex;
+      width: 100%;
+      height: 100vh;
+    }
+
+    /* LEFT SIDE: Brand Showcase */
+    .brand-side {
+      flex: 1.2;
+      position: relative;
+      background: #060610;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4rem 6rem;
+      overflow: hidden;
+      border-right: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* Animated Grid & Orbs for Left Side */
+    .auth-mesh {
+      position: absolute;
+      inset: 0;
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+      z-index: 0;
+      transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+      opacity: 0.6;
+      animation: mesh-move 20s linear infinite;
+    }
+
+    @keyframes mesh-move {
+      to { transform: perspective(500px) rotateX(60deg) translateY(100px) translateZ(-200px); }
+    }
+
+    .brand-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      z-index: 0;
+    }
+
+    .brand-orb-1 {
+      width: 600px; height: 600px;
+      background: rgba(124,58,237,0.15);
+      top: -20%; left: -20%;
+      animation: float 12s ease-in-out infinite alternate;
+    }
+
+    .brand-orb-2 {
+      width: 500px; height: 500px;
+      background: rgba(0,245,255,0.1);
+      bottom: -10%; right: -20%;
+      animation: float 14s ease-in-out infinite alternate-reverse;
+    }
+
+    .brand-content {
+      position: relative;
+      z-index: 10;
+      max-width: 500px;
+    }
+
+    .brand-shield {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--accent), #9333ea);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 0 30px rgba(124, 58, 237, 0.4), inset 0 2px 0 rgba(255,255,255,0.2);
+    }
+    .brand-shield svg { color: #fff; width: 32px; height: 32px; }
+
+    .brand-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      line-height: 1.1;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(to right, #fff, rgba(255,255,255,0.7));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -1px;
+    }
+
+    .brand-desc {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+
+    /* Stats on left side */
+    .brand-stats {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .brand-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .stat-ring {
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      border: 1px dashed rgba(124,58,237,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #fff;
+      background: rgba(124,58,237,0.05);
+      position: relative;
+    }
+    .stat-ring::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border: 2px solid transparent;
+      border-top-color: #00f5ff;
+      border-radius: 50%;
+      animation: spin 3s linear infinite;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    .brand-stat small {
+      text-align: center;
+      color: rgba(255,255,255,0.4);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.75rem;
+    }
+
+
+    /* RIGHT SIDE: Auth Panel */
+    .auth-side {
+      flex: 1;
+      position: relative;
+      background: var(--bg-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+    }
+
+    .auth-container {
+      width: 100%;
+      max-width: 440px;
+      animation: slide-left 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateX(40px);
+    }
+
+    @keyframes slide-left {
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .auth-header { margin-bottom: 2.5rem; }
+    .auth-title { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing:-0.5px; }
+    .auth-subtitle { color: var(--text-muted); font-size: 1rem; }
+
+    /* Custom Google Button */
+    .btn-google {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      padding: 0.95rem;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-google:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.15);
+      transform: translateY(-2px);
+    }
+    .btn-google svg { width: 22px; height: 22px; }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 2rem 0;
+      color: rgba(255,255,255,0.3);
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .divider::before { margin-right: 1rem; }
+    .divider::after { margin-left: 1rem; }
+
+    /* Form */
+    .auth-form { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .input-group { display: flex; flex-direction: column; gap: 0.6rem; }
+
+    .input-group label {
+      font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.7);
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper svg {
+      position: absolute;
+      left: 1rem;
+      color: rgba(255,255,255,0.3);
+      pointer-events: none;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 0.95rem 1rem 0.95rem 2.8rem;
+      color: #fff;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    .input-wrapper input:focus {
+      border-color: var(--accent);
+      background: rgba(0,0,0,0.5);
+      box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15);
+    }
+    .input-wrapper input:focus + svg { color: var(--accent); }
+
+    .auth-submit-btn {
+      background: linear-gradient(135deg, var(--accent), #9333ea);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 1rem;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3);
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+    }
+
+    .auth-submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(124, 58, 237, 0.4);
+    }
+
+    .auth-submit-btn:active { transform: translateY(0); }
+
+    .loading-spinner {
+      display: none; width: 20px; height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .switch-mode {
+      text-align: center; font-size: 0.95rem; color: var(--text-muted); margin-top: 2rem;
+    }
+    .switch-mode a {
+      color: #c4b5fd; text-decoration: none; font-weight: 600; transition: color 0.2s;
+    }
+    .switch-mode a:hover { color: #fff; }
+
+    #signup-fields { display: none; }
+
+    /* Custom Modal Overlay */
+    .mock-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+    .mock-modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .mock-modal-box {
+      background: #0d0d16;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 2.2rem;
+      width: 100%;
+      max-width: 420px;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+    }
+    .mock-modal-overlay.active .mock-modal-box {
+      transform: translateY(0);
+    }
+    .mock-modal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.25rem;
+    }
+    .mock-modal-header svg {
+      width: 24px; height: 24px; color: var(--accent);
+    }
+    .mock-modal-header h3 {
+      font-size: 1.25rem; font-family: 'Playfair Display', serif; font-weight: 700; margin: 0; color: #fff;
+    }
+    .mock-modal-box p {
+      font-size: 0.95rem; color: rgba(255,255,255,0.6); margin: 0 0 1.5rem 0; line-height: 1.5;
+    }
+    .mock-modal-actions {
+      display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.75rem;
+    }
+    .mock-btn {
+      padding: 0.7rem 1.4rem; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; font-size: 0.95rem; transition: all 0.2s;
+    }
+    .mock-btn-cancel {
+      background: rgba(255,255,255,0.08); color: #fff;
+    }
+    .mock-btn-cancel:hover { background: rgba(255,255,255,0.15); }
+    .mock-btn-confirm {
+      background: var(--accent); color: #fff;
+    }
+    .mock-btn-confirm:hover { background: #9333ea; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .split-layout { flex-direction: column; height: auto; }
+      .brand-side { display: none; } /* Hide heavy visuals on mobile */
+      .auth-side { min-height: 100vh; padding: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- Facebook SDK -->
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+  <div id="g_id_onload"
+    data-client_id="1007092696181-vk9tqq0gauarejcefks7oui706c62scm.apps.googleusercontent.com"
+    data-context="use"
+    data-ux_mode="popup"
+    data-callback="handleCredentialResponse"
+    data-auto_prompt="true"
+    data-auto_select="true">
+  </div>
+
+  <div class="split-layout">
+    <!-- LEFT SIDE: Brand -->
+    <div class="brand-side">
+      <div class="auth-mesh"></div>
+      <div class="brand-orb brand-orb-1"></div>
+      <div class="brand-orb brand-orb-2"></div>
+
+      <div class="brand-content">
+        <div class="brand-shield">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h1 class="brand-title">TrueVision</h1>
+        <p class="brand-desc">Join thousands of analysts exposing deepfakes, synthetic boundaries, and digital manipulations in real-time with our tri-model AI architecture.</p>
+        
+        <div class="brand-stats">
+          <div class="brand-stat">
+            <div class="stat-ring">99.2%</div>
+            <small>Accuracy</small>
+          </div>
+          <div class="brand-stat">
+            <div class="stat-ring">CNN</div>
+            <small>Face-swap</small>
+          </div>
+          <div class="brand-stat">
+            <div class="stat-ring">CViT</div>
+            <small>Boundaries</small>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE: Auth -->
+    <div class="auth-side">
+      <div class="auth-container">
+        
+        <div class="auth-header">
+          <h2 class="auth-title">Welcome back</h2>
+          <p class="auth-subtitle">Sign in to your secure workspace.</p>
+        </div>
+
+        <!-- Custom Beautiful Social Buttons -->
+        <div style="display:flex; flex-direction:column; gap:0.75rem;">
+          <div class="g_id_signin"
+               data-type="standard"
+               data-shape="rectangular"
+               data-theme="filled_black"
+               data-text="continue_with"
+               data-size="large"
+               data-logo_alignment="left"
+               data-width="100%">
+          </div>
+          
+          <button type="button" class="btn-google" id="custom-fb-btn" style="background:rgba(24, 119, 242, 0.1); border-color:rgba(24, 119, 242, 0.2);">
+            <svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.249h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            Continue with Facebook
+          </button>
+
+          <button type="button" class="btn-google" id="custom-twitter-btn" style="background:rgba(29, 161, 242, 0.1); border-color:rgba(29, 161, 242, 0.2);">
+            <svg viewBox="0 0 24 24" fill="#1DA1F2"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+            Continue with Twitter
+          </button>
+        </div>
+
+        <div class="divider">or standard login</div>
+
+        <form class="auth-form" id="auth-form">
+          <div class="input-group" id="signup-fields">
+            <label for="name">Full Name</label>
+            <div class="input-wrapper">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input type="text" id="name" placeholder="John Analyst" />
+            </div>
+          </div>
+          
+          <div class="input-group">
+            <label for="email">Email Address</label>
+            <div class="input-wrapper">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <input type="email" id="email" required placeholder="you@truevision.ai" />
+            </div>
+          </div>
+          
+          <div class="input-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="password" required placeholder="••••••••" />
+            </div>
+          </div>
+
+          <button type="submit" class="auth-submit-btn" id="submit-btn">
+            <span class="btn-text">Sign In</span>
+            <div class="loading-spinner" id="spinner"></div>
+          </button>
+        </form>
+
+        <div class="switch-mode" id="mode-text">
+           Don't have an account? <a href="#" id="toggle-mode">Create one now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script>
+    let isLogin = true;
+    const form = document.getElementById('auth-form');
+    const signupFields = document.getElementById('signup-fields');
+    const authTitle = document.querySelector('.auth-title');
+    const authSubtitle = document.querySelector('.auth-subtitle');
+    const btnText = document.querySelector('.btn-text');
+    const toggleBtn = document.getElementById('toggle-mode');
+    const modeText = document.getElementById('mode-text');
+    const spinner = document.getElementById('spinner');
+
+    // Setup toggling between login and signup
+    toggleBtn.addEventListener('click', function toggleHandler(e) {
+      e.preventDefault();
+      isLogin = !isLogin;
+      
+      if(isLogin) {
+        signupFields.style.display = 'none';
+        authTitle.textContent = 'Welcome back';
+        authSubtitle.textContent = 'Sign in to your secure workspace.';
+        btnText.textContent = 'Sign In';
+        modeText.innerHTML = `Don't have an account? <a href="#" id="toggle-mode">Create one now</a>`;
+      } else {
+        signupFields.style.display = 'flex';
+        authTitle.textContent = 'Create an Account';
+        authSubtitle.textContent = 'Join the leading forensic platform.';
+        btnText.textContent = 'Start Free Trial';
+        modeText.innerHTML = `Already have an account? <a href="#" id="toggle-mode">Sign in here</a>`;
+      }
+      
+    // Re-bind the click event to the new link
+      document.getElementById('toggle-mode').addEventListener('click', toggleHandler);
+    }, { once: true });
+
+    window.addEventListener('load', () => {
+      if (window.FB) {
+        window.FB.init({
+          appId: '761397640298692',
+          cookie: true,
+          xfbml: true,
+          version: 'v19.0'
+        });
+      }
+    });
+
+    document.getElementById('custom-fb-btn').addEventListener('click', () => {
+      if (!window.FB) return alert('Facebook SDK loading...');
+      window.FB.login((response) => {
+        if (response.authResponse) {
+          window.FB.api('/me', {fields: 'name,email,picture'}, (res) => {
+            let existingUser = null;
+            try {
+              const stored = localStorage.getItem('tv_user');
+              if (stored) existingUser = JSON.parse(stored);
+            } catch (err) {}
+            
+            const currentUser = {
+              ...(existingUser?.email === res.email ? existingUser : {}),
+              name: res.name,
+              email: res.email || `${res.id}@facebook.com`,
+              avatar: res.name ? res.name[0].toUpperCase() : 'F',
+              isNew: existingUser && existingUser.email === res.email ? false : true,
+            };
+            localStorage.setItem('tv_user', JSON.stringify(currentUser));
+            window.location.href = 'app.html';
+          });
+        }
+      }, {scope: 'public_profile,email'});
+    });
+    
+    document.getElementById('custom-twitter-btn').addEventListener('click', () => alert('Twitter requires backend configuration.'));
+
+    // Listen for real OAuth token redirect inside hash (for fallback)
+    window.addEventListener('load', () => {
+       const hash = window.location.hash;
+       if (hash.includes('access_token')) {
+           processLoginSuccess('Authenticated User', 'oauth@truevision.ai', '', false, hash.split('access_token=')[1]);
+       }
+    });
+
+    // Handle standard email/password form
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const pwd = document.getElementById('password').value;
+      let name = document.getElementById('name').value;
+      
+      if (isLogin) {
+         try {
+             const existing = JSON.parse(localStorage.getItem('tv_user') || '{}');
+             if (existing && existing.email === email && existing.name) {
+                 name = existing.name;
+             }
+         } catch(err) {}
+      }
+      if (!name) name = email.split('@')[0];
+      
+      btnText.style.display = 'none';
+      spinner.style.display = 'block';
+
+      try {
+        await new Promise(r => setTimeout(r, 1200));
+        await processLoginSuccess(name, email, '', !isLogin);
+      } catch (err) {
+        alert("Authentication Failed");
+      } finally {
+        btnText.style.display = 'block';
+        spinner.style.display = 'none';
+      }
+    });
+
+    // Google Identity Services Callback
+    window.handleCredentialResponse = async (response) => {
+       const userObject = jwt_decode(response.credential);
+       processLoginSuccess(userObject.name, userObject.email, userObject.picture, false, response.credential);
+    };
+
+    async function processLoginSuccess(name, email, picture, isNew, tokenOverride=null) {
+       let userProfile = { email, name, picture: picture || '' };
+       
+       if (!isNew) {
+           try {
+               const existing = JSON.parse(localStorage.getItem('tv_user') || '{}');
+               if (existing && existing.email === email) {
+                   userProfile = { ...existing, email, name: name || existing.name, picture: picture || existing.picture };
+               }
+           } catch(err) {}
+       }
+
+       const token = tokenOverride || 'mock_jwt_token_' + Date.now();
+       
+       localStorage.setItem('tv_user', JSON.stringify(userProfile));
+       localStorage.setItem('tv_token', token);
+
+       // Send welcome email via python backend
+       try {
+          await fetch('http://127.0.0.1:8000/send-welcome-email/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name, email: email, is_new_user: isNew })
+          });
+       } catch(err) { console.error("Email send err:", err); }
+
+       // Fix exactly the issue! Detect if we are in an OAuth popup!
+        if (window.opener && window.opener !== window) {
+            window.opener.location.href = 'index.html'; // Send the main window to home page
+            window.close(); // Close the tiny popup window!
+        } else {
+            window.location.href = 'index.html'; // Otherwise just redirect normally
+        }
+    }
+
+    // Auto login check
+    window.onload = () => {
+      const token = localStorage.getItem('tv_token');
+      if (token) window.location.href = 'app.html';
+    };
+  </script>
+</body>
+</html>
