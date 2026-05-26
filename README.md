@@ -380,7 +380,7 @@ Contributions, bug reports, and feature requests are welcome! Please open an iss
 
 **Author**: Varun  
 **Project**: TrueVision — Enterprise Deepfake Detection  
-**Email**: [Your contact info]  
+**Email**: [varunvadlakonda4@gmail.com]
 **GitHub**: [@VisionStack-404](https://github.com/VisionStack-404)
 
 ---
