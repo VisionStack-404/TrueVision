@@ -1,7 +1,3 @@
-/**
- * TrueVision — app.js v4
- * Landing page · Google One Tap · Enhanced results · Profile · Premium UX
- */
 
 const API = 'http://127.0.0.1:8000';
 
@@ -134,9 +130,7 @@ function initRevealOnScroll() {
   });
 }
 
-// ══════════════════════════════════════════════════
-// GOOGLE ONE TAP SIGN-IN
-// ══════════════════════════════════════════════════
+
 function initGoogleOneTap() {
   // Wait for GIS library to load
   if (typeof google === 'undefined' || !google.accounts) {
