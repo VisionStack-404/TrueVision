@@ -1,7 +1,7 @@
 
 const API = 'http://127.0.0.1:8000';
 
-// ── Replace with your Google OAuth Client ID ──
+// ── Replace with your Google OAuth of it Client ID ──
 const GOOGLE_CLIENT_ID = '99923953469-58moinkms1vo0pr7ni2a8g4v24nrarp3.apps.googleusercontent.com';
 
 const MODEL_DESC = {
