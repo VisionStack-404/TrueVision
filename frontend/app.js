@@ -19,7 +19,7 @@ let feedbackSent  = false;
 let progressTimer = null;
 let selectedGender= null;
 let reportCounter = parseInt(localStorage.getItem('tv_report_counter') || '0');
-// ══════════════════════════════════════════════════
+
 // INIT
 // ══════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
