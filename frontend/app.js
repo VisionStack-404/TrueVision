@@ -11,7 +11,7 @@ const MODEL_DESC = {
 };
 
 // ── State ────────────────────────────────────────
-let currentUser   = null;   // { name, email, avatar, age?, gender?, isNew }
+let currentUser   = null;   // { (name, email, avatar, age?, gender?, isNew) }
 let currentFile   = null;
 let history       = [];
 let activeHist    = null;
