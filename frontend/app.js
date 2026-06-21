@@ -87,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// ══════════════════════════════════════════════════
 // LANDING PAGE (Only applicable in index.html)
 // ══════════════════════════════════════════════════
 function initLandingParticles() {
