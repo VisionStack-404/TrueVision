@@ -66,7 +66,7 @@ def get_capabilities():
         )
 
 
-# ✅ POST: Forward File to EC2 for Processing
+#  POST: Forward File to EC2 for Processing
 @app.post("/process/")
 async def process_file(file: UploadFile = File(...)):
     try:
