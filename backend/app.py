@@ -38,7 +38,7 @@ app.add_middleware(
 )
 
 
-# ✅ Root Endpoint
+# Root Endpoint of returning in json format
 @app.get("/")
 def root():
     return {
