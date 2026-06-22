@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
-# SMTP Configuration (Gmail)
+# SMTP Configuration of (Gmail)
 SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
 SMTP_USER = os.getenv("SMTP_USER", "varunvadlakonda1577@gmail.com")
@@ -477,4 +477,4 @@ async def send_audit_report(payload: AuditEmailPayload):
 
 # Run the server
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
