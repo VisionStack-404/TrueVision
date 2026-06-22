@@ -25,7 +25,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# EC2 Endpoints
+# EC2 Endpoints of get and post request
 EC2_PROCESS_URL = "http://3.238.89.41:8000/process/"
 EC2_CAPABILITIES_URL = "http://3.238.89.41:8000/detection/capabilities/"
 
