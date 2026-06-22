@@ -52,7 +52,7 @@ def root():
     }
 
 
-# ✅ GET: Fetch Detection Capabilities from EC2
+#  GET: Fetch Detection Capabilities from EC2
 @app.get("/detection/capabilities/")
 def get_capabilities():
     try:
