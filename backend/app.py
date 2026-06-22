@@ -107,7 +107,7 @@ async def process_file(file: UploadFile = File(...)):
         )
 
 
-# ✅ Informational GET Endpoint for /process/
+#  Informational GET Endpoint for /process/
 @app.get("/process/")
 def process_info():
     return {
