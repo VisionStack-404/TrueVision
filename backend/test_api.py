@@ -1,6 +1,6 @@
 import requests
 
-# 🔥 YOUR EC2 URL
+# YOUR EC2 instance URL
 url = "http://3.238.89.41:8000/upload/"
 
 # 🔥 VIDEO FILE (LOCAL)
