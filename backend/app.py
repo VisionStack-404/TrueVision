@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 load_dotenv(override=True)
 
-# SMTP Configuration of(Gmail)
+# SMTP Configurations of(Gmail)
 SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
 SMTP_USER = os.getenv("SMTP_USER", "varunvadlakonda1577@gmail.com")
