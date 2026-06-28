@@ -4,7 +4,7 @@ evaluate.py  â€“  TrueVision evaluation & validation protocol
 Provides:
   1. Per-model evaluation (AUC, F1, FPR, FNR, ECE)
   2. Ensemble evaluation with ablation study
-  3. Confidence histograms (ASCII + matplotlib)
+  3. Confidence histogram (ASCII + matplotlib)
   4. Leakage check (file hash overlap between train/val)
   5. Per-threshold sweep to find optimal operating point
 
