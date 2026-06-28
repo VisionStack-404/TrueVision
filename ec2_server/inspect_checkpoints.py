@@ -1,5 +1,5 @@
 """
-Inspect all model checkpoints to discover their actual architecture.
+Inspect all model checkpoint to discover their actual architecture.
 Run this on EC2:  python inspect_checkpoints.py
 """
 import torch
