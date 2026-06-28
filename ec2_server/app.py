@@ -1,6 +1,6 @@
 # app.py
 # TrueVision - Main FastAPI application
-# Patched: confidence-flip bug fixed; uncertainty-band veto; disputed-case handling.
+# Patched: confidence-flip bug fixed uncertainty-band veto; disputed-case handling.
 
 from typing import List, Dict, Any
 
