@@ -1,7 +1,7 @@
 """
 diagnose.py  â€“  TrueVision diagnostic suite
 ============================================
-Run BEFORE touching any weights.  Tells you exactly what is wrong.
+Run BEFORE touching any weights.  Tell you exactly what is wrong.
 
 Usage:
     python diagnose.py --model_dir /path/to/models --faces_dir /path/to/faces
