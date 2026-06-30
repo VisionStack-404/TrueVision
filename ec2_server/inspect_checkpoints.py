@@ -51,7 +51,7 @@ for name, path in checkpoints.items():
                 print(f"  ⚠️ Unknown format. Top keys: {top_keys[:10]}")
                 state = ck
     else:
-        print(f"  ⚠️ Not a dict, type: {type(ck)}")
+        print(f"   Not a dict, type: {type(ck)}")
         continue
 
     # Print all keys with shapes
