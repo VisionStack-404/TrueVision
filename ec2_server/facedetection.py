@@ -1,7 +1,7 @@
 import cv2
 import os
 
-# Load Haar Cascade safely
+# Load  the Haar Cascade safely
 cascade_path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 face_cascade = cv2.CascadeClassifier(cascade_path)
 
