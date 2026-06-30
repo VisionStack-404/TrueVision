@@ -1,6 +1,6 @@
 """
 evaluate.py  â€“  TrueVision evaluation & validation protocol
-============================================================
+
 Provides:
   1. Per-model evaluation (AUC, F1, FPR, FNR, ECE)
   2. Ensemble evaluation with ablation study
