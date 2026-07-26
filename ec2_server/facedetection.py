@@ -2,8 +2,8 @@ import cv2
 import os
 
 # Load  the Haar Cascade safely
-cascade_path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-face_cascade = cv2.CascadeClassifier(cascade_path)
+cascade = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+face_cascade = cv2.CascadeClassifier(cascade)
 
 if face_cascade.empty():
     raise RuntimeError(f"âŒ Failed to load Haar Cascade from {cascade_path}")
