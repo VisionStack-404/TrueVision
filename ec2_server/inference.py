@@ -13,8 +13,8 @@ THRESHOLD = 0.5
 
 
 # CALIBRATION — stretches score toward 80%+
-# raw=0.30 → REAL 81.6%
-# raw=0.70 → FAKE 81.6%
+# raw=0.30 → REAL 85.6%
+# raw=0.70 → FAKE 86.6%
 # raw=0.50 → uncertain 50% (genuinely unsure)
 # ================================================
 def _calibrate(p_fake: float) -> float:
