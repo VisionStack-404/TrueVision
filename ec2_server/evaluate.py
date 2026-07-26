@@ -49,7 +49,7 @@ def compute_all_metrics(y_true, y_score, threshold=0.5):
     """
     yt = np.array(y_true)
     ys = np.array(y_score)
-    yp = (ys > threshold).astype(int)   # 0=predict_FAKE, 1=predict_REAL... wait
+    yp = (ys > threshold).astype(int)   
     # y_true=0=FAKE, y_score=p_fake â†’ predict FAKE if p_fake > threshold
     # So yp=1 means "predicted FAKE"
     fake_pred = (ys > threshold).astype(int)
