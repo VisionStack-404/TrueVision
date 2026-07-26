@@ -48,7 +48,7 @@ for name, path in checkpoints.items():
                 print(f"  Raw state_dict format (no wrapper)")
                 state = ck
             else:
-                print(f"  ⚠️ Unknown format. Top keys: {top_keys[:10]}")
+                print(f"   Unknown format. Top keys: {top_keys[:10]}")
                 state = ck
     else:
         print(f"   Not a dict, type: {type(ck)}")
